@@ -278,6 +278,8 @@ int main() {
 
           	bool too_close = false;
 
+          	int sum = -1;
+
           	//find ref_v to use
 
           	for (int i=0; i<sensor_fusion.size(); i++) {
@@ -300,8 +302,15 @@ int main() {
           				//ref_vel = 29.5; //mph
           				too_close = true;
 
+          				//change the lane
           				if (lane>0) {
-          					lane = 0;
+          					lane -= 1;
+          					sum = 1;
+          				} else if (lane = 0) {
+          					lane = 2;
+          				} else {
+          					lane = 1;
+          					sum = -1;
           				}
           			}
           		}
