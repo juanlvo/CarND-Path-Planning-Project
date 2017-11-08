@@ -280,12 +280,77 @@ int main() {
 
           	int sum = -1;
 
+          	bool car_in_front = false;
+          	bool car_left = false;
+          	bool car_right = false;
+
           	//find ref_v to use
 
           	for (int i=0; i<sensor_fusion.size(); i++) {
           		//car is in my lane
           		float d = sensor_fusion[i][6];
-          		if (d < (2+4*lane+2) && d > (2+4*lane-2)) {
+          		int car_lane = -1;
+
+
+          		if (d > 0 && d < 4) {
+          			car_lane = 0;
+          		} else if (d < 4 && d < 8) {
+          			car_lane = 1;
+          		} else if (d < 4 && d < 12) {
+          			car_lane = 2;
+          		}
+
+          		//Calculate speed of the car
+      			double vx = sensor_fusion[i][3];
+      			double vy = sensor_fusion[i][4];
+      			double check_speed = sqrt(vx*vx+vy*vy);
+      			double check_car_s = sensor_fusion[i][5];
+
+          		check_car_s += ((double)prev_size*.02*check_speed); //if using previous points can project s value out
+
+          		if (car_lane == lane) {
+          			//Car in front of us
+          			car_in_front |= check_car_s > car_s && check_car_s - car_s < 30;
+          		} else if (car_lane - lane == -1) {
+          			//Car on the left side
+          			car_left |= car_s - 30 < check_car_s && car_s + 30 > check_car_s;
+          		} else if (car_lane - lane == 1) {
+          			//Car on the right side
+          			car_right |= car_s - 30 < check_car_s && car_s + 30 > check_car_s;
+          		} else {
+                    if ( lane != 1 ) { // if we are not on the center lane.
+                      if ( ( lane == 0 && !car_right ) || ( lane == 2 && !car_left ) ) {
+                        lane = 1; // Back to center.
+                      }
+                    }
+                    if ( ref_vel < 49.5 ) {
+                    	ref_vel += 0.224;
+                    }
+          		}
+
+          		/*if (car_in_front) {
+          			if (!car_left && lane > 0) {
+          				lane--;
+          			} else if(!car_right && lane > 0) {
+          				lane++;
+          			} else {
+          				too_close = true;
+          			}
+          		}*/
+
+          		/*if((check_car_s > car_s) && ((check_car_s-car_s) < 30)) {
+          			too_close = true;
+          		}*/
+
+
+              	if (too_close) {
+              		ref_vel -=0.224;
+              	} else if (ref_vel < 49.5){
+              		ref_vel +=0.224;
+              	}
+
+
+          		/*if (d < (2+4*lane+2) && d > (2+4*lane-2)) {
           			double vx = sensor_fusion[i][3];
           			double vy = sensor_fusion[i][4];
           			double check_speed = sqrt(vx*vx+vy*vy);
@@ -313,14 +378,10 @@ int main() {
           					sum = -1;
           				}
           			}
-          		}
+          		}*/
           	}
 
-          	if (too_close) {
-          		ref_vel -=.224;
-          	} else if (ref_vel < 49.5){
-          		ref_vel +=.224;
-          	}
+
 
           	//Create a list of widely spaced (x, y) waypoints, evenly spaced at 30m.
           	//Later we will interpolate these waypoints with a spline and fill it in with more points that control speed.
