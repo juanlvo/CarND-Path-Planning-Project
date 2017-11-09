@@ -283,9 +283,11 @@ int main() {
           	//find ref_v to use
 
           	for (int i=0; i<sensor_fusion.size(); i++) {
+          		int cost = 999;
           		//car is in my lane
           		float d = sensor_fusion[i][6];
           		if (d < (2+4*lane+2) && d > (2+4*lane-2)) {
+          			cout << sensor_fusion[i] << endl;
           			double vx = sensor_fusion[i][3];
           			double vy = sensor_fusion[i][4];
           			double check_speed = sqrt(vx*vx+vy*vy);
@@ -302,16 +304,11 @@ int main() {
           				//ref_vel = 29.5; //mph
           				too_close = true;
 
-          				//change the lane
-          				if (lane>0) {
-          					lane -= 1;
-          					sum = 1;
-          				} else if (lane = 0) {
-          					lane = 2;
-          				} else {
-          					lane = 1;
-          					sum = -1;
-          				}
+          			}
+          		}
+          		if (lane + 1 < 3) {
+          			if (d < (2+4*(lane+1)+2) && d > (2+4*(lane+1)-2)) {
+
           			}
           		}
           	}
@@ -321,6 +318,17 @@ int main() {
           	} else if (ref_vel < 49.5){
           		ref_vel +=.224;
           	}
+
+			//change the lane
+			if (lane>0) {
+				lane -= 1;
+				sum = 1;
+			} else if (lane = 0) {
+				lane = 2;
+			} else {
+				lane = 1;
+				sum = -1;
+			}
 
           	//Create a list of widely spaced (x, y) waypoints, evenly spaced at 30m.
           	//Later we will interpolate these waypoints with a spline and fill it in with more points that control speed.
