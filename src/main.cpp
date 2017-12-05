@@ -9,9 +9,8 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "json.hpp"
 #include "spline.h"
-
 using namespace std;
-
+//revert
 // for convenience
 using json = nlohmann::json;
 
@@ -283,11 +282,11 @@ int main() {
           	//find ref_v to use
 
           	for (int i=0; i<sensor_fusion.size(); i++) {
-          		int cost = 999;
+              	int right = 0;
+              	int left = 0;
           		//car is in my lane
           		float d = sensor_fusion[i][6];
           		if (d < (2+4*lane+2) && d > (2+4*lane-2)) {
-          			cout << sensor_fusion[i] << endl;
           			double vx = sensor_fusion[i][3];
           			double vy = sensor_fusion[i][4];
           			double check_speed = sqrt(vx*vx+vy*vy);
@@ -304,11 +303,43 @@ int main() {
           				//ref_vel = 29.5; //mph
           				too_close = true;
 
-          			}
-          		}
-          		if (lane + 1 < 3) {
-          			if (d < (2+4*(lane+1)+2) && d > (2+4*(lane+1)-2)) {
+          				//change lanes 2
+          				if (lane = 1) {
+          					right = 2+4*lane+1;
+          					left = 2+4*lane-1;
+          					if (right > left) {
+          						lane = 2;
+          					} else {
+          						lane = 0;
+          					}
+          				} else if (lane = 2) {
+          					right = 2+4*lane-1;
+          					left = 2+4*lane-2;
+          					if (right < left) {
+          						lane = 1;
+          					} else {
+          						lane = 0;
+          					}
+          				} else if (lane = 0) {
+          					right = 2+4*lane+2;
+          					left = 2+4*lane+1;
+          					if (right > left) {
+          						lane = 2;
+          					} else {
+          						lane = 1;
+          					}
+          				}
 
+          				//change the lane
+          				/*if (lane>0) {
+          					lane -= 1;
+          					sum = 1;
+          				} else if (lane = 0) {
+          					lane = 2;
+          				} else {
+          					lane = 1;
+          					sum = -1;
+          				}*/
           			}
           		}
           	}
@@ -318,17 +349,6 @@ int main() {
           	} else if (ref_vel < 49.5){
           		ref_vel +=.224;
           	}
-
-			//change the lane
-			if (lane>0) {
-				lane -= 1;
-				sum = 1;
-			} else if (lane = 0) {
-				lane = 2;
-			} else {
-				lane = 1;
-				sum = -1;
-			}
 
           	//Create a list of widely spaced (x, y) waypoints, evenly spaced at 30m.
           	//Later we will interpolate these waypoints with a spline and fill it in with more points that control speed.
