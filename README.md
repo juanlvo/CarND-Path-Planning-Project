@@ -1,5 +1,5 @@
 # CarND-Path-Planning-Project
-Self-Driving Car Engineer Nanodegree Program
+Self-Driving Car Engineer Nanodegree Program solution from Juan Luis Vivas Occhipinti
    
 ### Simulator.
 You can download the Term3 Simulator which contains the Path Planning Project from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases).
@@ -135,6 +135,56 @@ that's just a guess.
 One last note here: regardless of the IDE used, every submitted project must
 still be compilable with cmake and make./
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+## Project Rubrics
+<b>Compilation</b>
+<table>
+	<tr>
+		<th>Criteria</th>
+		<th>Meets Specifications</th>
+	</tr>
+	<tr>
+		<td>The code compiles correctly.</td>
+		<td>Yes, the code compile without any error.</td>
+	</tr>
+</table>
+
+<b>Valid Trajectories </b>
+<table>
+	<tr>
+		<th>Criteria</th>
+		<th>Meets Specifications</th>
+	</tr>
+	<tr>
+		<td>The car is able to drive at least 4.32 miles without incident..</td>
+		<td>Yes the car is able to drive 4.32 miles without incident.</td>
+	</tr>
+	<tr>
+		<td>The car drives according to the speed limit.</td>
+		<td>Yes, all the time is driving under 50 mph.</td>
+	</tr>
+	<tr>
+		<td>Max Acceleration and Jerk are not Exceeded.</td>
+		<td>Yes the car doesn't exceed the max acceleration neither the Jerk.</td>
+	</tr>
+	<tr>
+		<td>The car stays in its lane, except for the time between changing lanes.</td>
+		<td>Yes</td>
+	</tr>
+	<tr>
+		<td>The car is able to change lanes.</td>
+		<td>Yes</td>
+	</tr>
+</table>
+
+<b>Reflection</b>
+<table>
+	<tr>
+		<th>Criteria</th>
+		<th>Meets Specifications</th>
+	</tr>
+	<tr>
+		<td>There is a reflection on how to generate paths.</td>
+		<td>The implementation is predicting the path with the spline function, which fit the line to give points in a fairly smooth function.</td>
+	</tr>
+</tables>
 
