@@ -317,15 +317,11 @@ int main() {
           					left = 2+4*lane-2;
           					if (right < left) {
           						lane = 1;
-          					} else {
-          						lane = 0;
           					}
           				} else if (lane = 0) {
-          					right = 2+4*lane+2;
-          					left = 2+4*lane+1;
-          					if (right > left) {
-          						lane = 2;
-          					} else {
+          					right = 2+4*lane+1;
+          					left = 2+4*lane-1;
+          					if (right < left) {
           						lane = 1;
           					}
           				}
