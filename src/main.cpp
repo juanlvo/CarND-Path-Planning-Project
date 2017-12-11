@@ -279,6 +279,18 @@ int main() {
 
           	int sum = -1;
 
+            bool car_ahead = false;
+            bool car_left = false;
+            bool car_righ = false;
+
+      		bool car_lane_0_prev = false;
+      		bool car_lane_1_prev = false;
+      		bool car_lane_2_prev = false;
+
+      		bool car_lane_0_prev_2 = false;
+      		bool car_lane_1_prev_2 = false;
+      		bool car_lane_2_prev_2 = false;
+
           	//find ref_v to use
 
           	for (int i=0; i<sensor_fusion.size(); i++) {
@@ -286,6 +298,20 @@ int main() {
               	int left = 0;
           		//car is in my lane
           		float d = sensor_fusion[i][6];
+          		bool car_lane_0 = false;
+          		bool car_lane_1 = false;
+          		bool car_lane_2 = false;
+
+                if ( d >= 0 && d < 6 ) {
+                  car_lane_0 = true;
+                }
+                if ( d >= 2 && d < 9 ) {
+                  car_lane_1 = true;
+                }
+                if ( d >= 6 && d <= 14 ) {
+                  car_lane_2 = true;
+                }
+
           		if (d < (2+4*lane+2) && d > (2+4*lane-2)) {
           			double vx = sensor_fusion[i][3];
           			double vy = sensor_fusion[i][4];
@@ -303,8 +329,19 @@ int main() {
           				//ref_vel = 29.5; //mph
           				too_close = true;
 
+
+                        if (car_lane_0 && lane == 0 && !car_lane_1 && !car_lane_1_prev && !car_lane_1_prev_2) {
+                        	lane = 1;
+                        } else if (car_lane_1 && lane == 1 && !car_lane_0 && !car_lane_0_prev && !car_lane_0_prev_2) {
+                        	lane = 0;
+                        } else if (car_lane_1 && lane == 1 && !car_lane_2 && !car_lane_2_prev && !car_lane_2_prev_2){
+                        	lane = 2;
+                        } else if (car_lane_2 && lane == 2 && !car_lane_1 && !car_lane_1_prev && !car_lane_1_prev_2){
+                        	lane = 1;
+                        }
+
           				//change lanes 2
-          				if (lane = 1) {
+          				/*if (lane = 1) {
           					right = 2+4*lane+1;
           					left = 2+4*lane-1;
           					if (right > left) {
@@ -324,7 +361,8 @@ int main() {
           					if (right < left) {
           						lane = 1;
           					}
-          				}
+          				}*/
+
 
           				//change the lane
           				/*if (lane>0) {
@@ -338,6 +376,13 @@ int main() {
           				}*/
           			}
           		}
+          		car_lane_0_prev_2 = car_lane_0_prev;
+          		car_lane_1_prev_2 = car_lane_1_prev;
+          		car_lane_2_prev_2 = car_lane_2_prev;
+
+          		car_lane_0_prev = car_lane_0;
+          		car_lane_1_prev = car_lane_1;
+          		car_lane_2_prev = car_lane_2;
           	}
 
           	if (too_close) {
@@ -433,7 +478,7 @@ int main() {
           	}
 
           	//Calculate how to break up spline points so that we travel at our desired reference velocity
-          	double target_x = 30.0;
+          	double target_x = 10.0;
           	double target_y = s(target_x);
           	double target_dist = sqrt((target_x)*(target_x)+(target_y)*(target_y));
 
