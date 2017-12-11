@@ -184,7 +184,7 @@ still be compilable with cmake and make./
 	</tr>
 	<tr>
 		<td>There is a reflection on how to generate paths.</td>
-		<td>The implementation is predicting the path with the spline function, which fit the line to give points in a fairly smooth function.</td>
+		<td>The implementation is predicting the path with the spline function, which fit the line to give points in a fairly smooth function. For detecting the cars in each lane we increase the distance (compared with the lessons) from the cars to the others cars and as well we have a boolean per each lane in last 2 time for avoid collisions changing lanes in the wrong moment.</td>
 	</tr>
 </tables>
 
